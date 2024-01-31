@@ -1,0 +1,8 @@
+MODEL:
+  TYPE: ResNet
+  NAME: resnet-101
+  NUM_CLASSES: 3
+  PRETRAINED: false
+  PRETRAINED_PATH: /home/hzh/model/huggingface/resnet-101
+  EMBED_DIM: 2048
+TAG: direct-train

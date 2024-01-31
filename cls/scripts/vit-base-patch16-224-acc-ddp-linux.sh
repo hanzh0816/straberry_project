@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0,1,2,3, accelerate launch accelerate_main.py --cfg configs/vit-base-patch16-224.yaml --data-path /data1/hzh/Strawberry --batch-size 32 --output output

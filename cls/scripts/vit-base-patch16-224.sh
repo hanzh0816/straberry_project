@@ -1,0 +1,1 @@
+python main.py --cfg configs/vit-base-patch16-224.yaml --data-path D://Files//data//Strawberry --batch-size 32 --output output

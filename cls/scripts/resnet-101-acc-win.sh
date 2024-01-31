@@ -1,0 +1,1 @@
+accelerate launch accelerate_main.py --cfg configs/resnet-101.yaml --data-path D://Files//data//Strawberry --batch-size 32 --output output

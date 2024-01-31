@@ -1,0 +1,11 @@
+MODEL:
+  TYPE: ViT
+  NAME: vit-base-patch16-224
+  NUM_CLASSES: 3
+  PRETRAINED: true
+  PRETRAINED_PATH: D:\Files\model\huggingface\vit-base-patch16-224
+  PATCH_SIZE: 16
+  NUM_HEADS: 12
+  EMBED_DIM: 768
+  NUM_LAYERS: 12
+  MLP_DIM: 3072
