@@ -2,14 +2,14 @@
     <div class="login-container">
         <h1>Login</h1>
         <!-- todo: 加入LOGO -->
-        <el-input v-model="loginForm.username" placeholder="Username"></el-input>
-        <el-input v-model="loginForm.password" placeholder="Password" show-password></el-input>
+        <el-input v-model="loginForm.username" placeholder="用户名"></el-input>
+        <el-input v-model="loginForm.password" placeholder="密码" show-password></el-input>
         <div class="button-container">
-            <el-button type="primary" @click="login">Login</el-button>
+            <el-button type="primary" @click="login">登录</el-button>
             <Register></Register>
         </div>
         <el-divider></el-divider>
-        <el-button type="text" @click="showForgotPasswordDialog">Forgot Password</el-button>
+        <el-button type="text" @click="showForgotPasswordDialog">忘记密码</el-button>
 
 
         <el-dialog title="Forgot Password" :visible.sync="forgotPasswordDialogVisible">

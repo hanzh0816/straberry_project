@@ -51,15 +51,23 @@ class UserAPI(MethodView):
 
     def post(self):
         form = request.json
+        print(form)
         user = User()
         uid = len(User.query.all()) + 1
         user.uid = uid
         user.username = form["username"]
         user.password = form["password"]
         user.tele = form["tele"]
+        print(user)
         db.session.add(user)
         db.session.commit()
-        return {"status": "success", "message": "数据加载成功"}
+        return {
+            "status": "success",
+            "message": "数据加载成功",
+            "uid": uid,
+            "username": form["username"],
+            "password": form["password"],
+        }
 
 
 class RecordAPI(MethodView):
@@ -171,7 +179,7 @@ def forge():
 
 
 user_view = UserAPI.as_view("user_api")
-app.add_url_rule("/users/", view_func=user_view, methods=["GET", "POST"])
+app.add_url_rule("/users", view_func=user_view, methods=["GET", "POST"])
 
 record_view = RecordAPI.as_view("record_api")
 app.add_url_rule("/update", view_func=record_view, methods=["GET", "POST"])
