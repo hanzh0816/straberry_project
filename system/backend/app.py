@@ -170,6 +170,20 @@ def handle():
     return jsonify(return_data)
 
 
+@app.route("/check", methods=["GET"])
+def check_phone_num():
+    username = request.args.get("username")
+    tele = request.args.get("tele")
+    newPassword = request.args.get("newPassword")
+    user = User.query.filter_by(username=username, tele=tele).first()
+    if user:
+        user.password = newPassword
+        db.session.commit()
+        return {"check": True, "uid": user.uid}
+    else:
+        return {"message": "Invalid username or phone number"}
+
+
 @app.cli.command()
 def forge():
     db.drop_all()

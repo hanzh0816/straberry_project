@@ -7,28 +7,17 @@
         <div class="button-container">
             <el-button type="primary" @click="login">登录</el-button>
             <Register></Register>
+            <!-- <Register></Register> -->
+            <ForgetPasswd></ForgetPasswd>
         </div>
-        <el-divider></el-divider>
-        <el-button type="text" @click="showForgotPasswordDialog">忘记密码</el-button>
 
-
-        <el-dialog title="Forgot Password" :visible.sync="forgotPasswordDialogVisible">
-            <el-form>
-                <el-form-item label="Username">
-                    <el-input v-model="forgotPasswordForm.username" placeholder="Username"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="forgotPasswordDialogVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="sendForgotPasswordEmail">Send Email</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
   
 <script>
 import axios from 'axios';
 import Register from '../components/Register.vue';
+import ForgetPasswd from '../components/ForgetPasswd.vue';
 
 export default {
     components: {
@@ -79,7 +68,6 @@ export default {
                     this.loginForm.password = ''; // 清空密码输入框
                 })
                 .catch(error => {
-                    // todo: 处理登录失败后的逻辑
                     console.error(error);
                 });
         },

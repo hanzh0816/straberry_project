@@ -68,7 +68,6 @@ export default {
 
     methods: {
         register() {
-            // todo: 登录api实现
             // 登陆进行规则的校验，只有校验成功才能登陆,vaild=>所有的规则校验都成立才会进入到这里
             this.$refs.registerFormRules.validate((vaild) => {
                 if (!vaild) {
@@ -115,6 +114,12 @@ export default {
                     });
             });
         },
+        cancelRegister() {
+            this.registerForm.username = '';
+            this.registerForm.password = '';
+            this.registerForm.tele = '';
+            this.registerDialogVisible = false;
+        }
     },
 }
 </script> 
