@@ -59,9 +59,14 @@
 }
 
 body {
+  display: flex;
+  justify-content: center;
   min-height: 100vh;
+  min-width: 100vw;
   color: var(--color-text);
-  background: var(--color-background);
+  /* background: var(--color-background); */
+
+  background: #E8E8E8;
   transition:
     color 0.5s,
     background-color 0.5s;

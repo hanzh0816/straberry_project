@@ -1,9 +1,8 @@
 <template>
     <div class="forgetPasswdWindow">
-        <el-button type="primary" @click="registerDialogVisible = true">注册</el-button>
         <el-button type="primary" @click="forgetPasswdDialogVisible = true">忘记密码</el-button>
 
-        <el-dialog title="注册" v-model="forgetPasswdDialogVisible" width="30%">
+        <el-dialog title="忘记密码" v-model="forgetPasswdDialogVisible" width="30%">
             <el-form :model="forgetPasswdForm" :rules="forgetPasswdFormRules" ref="forgetPasswdFormRules" label-width="auto"
                 label-position="left" size="default">
                 <el-form-item label="用户名" prop="username">
@@ -79,9 +78,9 @@ export default {
                     console.log('error')
                     return;
                 };
-                username = this.forgetPasswdForm.username
-                newPassword = this.forgetPasswdForm.password
-                tele = this.forgetPasswdForm.tele
+                const username = this.forgetPasswdForm.username
+                const newPassword = this.forgetPasswdForm.password
+                const tele = this.forgetPasswdForm.tele
                 // check phone number
                 axios.get('http://127.0.0.1:5000/check', {
                     params: {
@@ -90,12 +89,17 @@ export default {
                         newPassword,
                     },
                 }).then(response => {
-                    if (response.data.message == true) {
+                    if (response.data.message == 'success') {
                         ElMessage({
                             message: '密码更新成功',
                             type: 'success',
                             duration: 2000
                         })
+                        // 清空输入框字段
+                        this.forgetPasswdForm.username = '';
+                        this.forgetPasswdForm.password = '';
+                        this.forgetPasswdForm.tele = '';
+                        this.forgetPasswdDialogVisible = false;
                     }
                     else {
                         ElMessage({

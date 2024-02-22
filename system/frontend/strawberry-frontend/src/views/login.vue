@@ -1,16 +1,29 @@
 <template>
-    <div class="login-container">
-        <h1>Login</h1>
-        <!-- todo: 加入LOGO -->
-        <el-input v-model="loginForm.username" placeholder="用户名"></el-input>
-        <el-input v-model="loginForm.password" placeholder="密码" show-password></el-input>
-        <div class="button-container">
-            <el-button type="primary" @click="login">登录</el-button>
-            <Register></Register>
-            <!-- <Register></Register> -->
-            <ForgetPasswd></ForgetPasswd>
-        </div>
+    <div class="login-wrapper">
+        <el-container>
+            <el-header>
+                <el-container class="logo-container">
+                    <el-aside width="200px">
+                        <img class="logo" src="../assets/logo.png" alt="Logo" />
+                    </el-aside>
+                    <el-main class="title" style="font-size: 40px">登录</el-main>
+                </el-container>
+            </el-header>
 
+            <el-main class="input">
+                <div><el-input v-model="loginForm.username" placeholder="用户名"></el-input></div>
+                <div><el-input v-model="loginForm.password" placeholder="密码" show-password></el-input></div>
+            </el-main>
+            <el-footer>
+                <div><el-button type="primary" @click="login">登录</el-button></div>
+                <div>
+                    <Register></Register>
+                </div>
+                <div>
+                    <ForgetPasswd></ForgetPasswd>
+                </div>
+            </el-footer>
+        </el-container>
     </div>
 </template>
   
@@ -22,6 +35,7 @@ import ForgetPasswd from '../components/ForgetPasswd.vue';
 export default {
     components: {
         Register,
+        ForgetPasswd,
     },
     data() {
         return {
@@ -98,28 +112,57 @@ export default {
 </script>
   
 <style>
-.login-container {
-    max-width: 300px;
-    max-height: min-content;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-
-.button-container {
+.login-wrapper {
     display: flex;
-    /* 使用 Flex 布局 */
-    justify-content: space-between;
-    /* 左右对齐，按钮之间的空间平均分配 */
-    max-width: 200px;
-    /* 设置容器宽度，根据实际需要调整 */
-}
+    width: 320px;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
 
-.el-button {
-    margin-top: 10px;
-}
+    .el-header {
+        margin: 10 auto;
+        height: 100px;
+        justify-content: space-between;
 
-.dialog-footer {
-    text-align: right;
+        .logo-container {
+            .el-aside {
+                width: 120px;
+                height: 120px;
+                justify-content: left;
+            }
+
+            .title {
+                display: flex;
+                height: 120px;
+                text-align: left;
+            }
+
+        }
+    }
+
+    .input {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 320px;
+        height: 220px;
+
+        .el-input {
+            width: 280px;
+            height: 40px;
+            margin-bottom: 20px;
+        }
+    }
+
+
+    .el-footer {
+        width: 300px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center
+    }
+
 }
 </style>

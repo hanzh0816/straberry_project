@@ -23,17 +23,12 @@ const router = createRouter({
         {
           path: 'imageshow',
           meta: { title: '图片展示' },
-          component: () => import('../views/Imageshow.vue')
+          component: () => import('../views/ImageShow.vue')
         },
         {
           path: 'record',
           meta: { title: '记录' },
           component: () => import('../views/Record.vue')
-        },
-        {
-          path: 'mine',
-          meta: { title: '图片展示' },
-          component: () => import('../views/Mine.vue')
         },
       ]
     },

@@ -6,11 +6,7 @@
 </script>
  
 <style>
-/* #app {
-  display: flex;
-  max-width: 90vw;
-  max-height: 90vh;
-  background-color: gray;
-  margin: 20px auto;
-} */
+body {
+  font-family:'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','微软雅黑',Arial,sans-serif;
+}
 </style>

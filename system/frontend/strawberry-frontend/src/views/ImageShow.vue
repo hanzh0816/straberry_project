@@ -1,38 +1,66 @@
 <template>
-    <div>
-        <el-button @click="selectImage">选择图片</el-button>
-        <el-button @click="selectPoint">选择分割点</el-button>
-        <el-button @click="updateImage">上传图片</el-button>
-        <el-button @click="updateRecord">上传记录</el-button>
-        <div class="image-container-wrapper">
-            <div class="image-container">
-                <el-image :src="selectedImage" alt="Selected Image" @click="handleImageClick" :style="selecteImageStyle" />
-                <div v-if="selectedPoint" class="point"
-                    :style="{ top: selectedPoint.y + 'px', left: selectedPoint.x + 'px' }">
+    <div class="imageshow">
+        <div class="image-container">
+            <div class="row1">
+                <div class="select-image">
+                    <div>选择草莓图像：</div>
+                    <div class="select-image-inner" style="position: relative;">
+                        <el-image :src="selectedImage" alt="Selected Image" @click="handleImageClick"
+                            :style="selecteImageStyle">
+                        </el-image>
+                        <div v-if="selectedPoint" class="point"
+                            :style="{ top: selectedPoint.y + 'px', left: selectedPoint.x + 'px' }">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="segement-image">
+                    <div>分割图像：</div>
+                    <el-image :src="segmentImage" alt="Segment Image" :style="segmentImageStyle" />
                 </div>
             </div>
-            <div class="image-container">
-                <el-image :src="segmentImage" alt="Segment Image" :style="segmentImageStyle" />
 
+            <div class="row2">
+                <div class="text-container">
+                    <div class="select-point">
+                        <div class="label">分割点坐标：<div v-if="selectedPoint" class="content">{{ selectedPoint.x }}，{{
+                            selectedPoint.y }}</div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="buttons-container">
+                    <el-button type="primary" @click="selectImage">选择图片</el-button>
+                    <el-button type="primary" @click="selectPoint">选择分割点</el-button>
+                    <el-button type="primary" @click="updateImage">上传图片</el-button>
+                </div>
             </div>
         </div>
-        <div v-if="selectedPoint">
-            <p>已选择的点的坐标：</p>
-            <p>x: {{ selectedPoint.x }}</p>
-            <p>y: {{ selectedPoint.y }}</p>
-        </div>
-        <div> <el-table :data="tableData" style="width: 100%">
-                <el-table-column prop="idx" label="指标" width="180" />
-                <el-table-column prop="result" label="结果" />
+
+        <div class="table-container">
+
+            <div>选择草莓图像：</div>
+            <el-table class="table" :data="tableData" border stripe
+                style="width: 100%; border-radius: 5px; max-width: 500px; border: 1px solid #ccc;">
+                <el-table-column prop="idx" label="指标" width="180" align="center" />
+                <el-table-column prop="result" label="结果" align="center" />
             </el-table>
+
+            <div class="update-button-container">
+                <el-button class="update-button" type="primary" @click="updateRecord">上传记录</el-button>
+            </div>
+
         </div>
+
     </div>
 </template>
   
 <script>
 import { ref, reactive } from 'vue';
 import axios from 'axios';
-import { ElLoading } from 'element-plus'
+import { ElLoading,ElMessage } from 'element-plus'
 
 
 export default {
@@ -243,6 +271,11 @@ export default {
                     if (response.status === 200) {
 
                         console.log('数据发送成功');
+                        ElMessage({
+                        message: '记录上传成功',
+                        type: 'success',
+                        duration: 1500
+                    })
                     } else {
                         // 请求失败
                         console.error('数据发送失败');
@@ -260,40 +293,116 @@ export default {
 </script>
   
 <style scoped>
-.image-container-wrapper {
+.imageshow {
     display: flex;
-    flex-direction: row;
     margin: 20px;
+    /* align-items: center; */
+    height: 80vh;
+    width: 100vw;
+}
 
-    .image-container {
-        padding: 30px 0;
-        text-align: center;
-        display: inline-block;
-        /* width: 49%; */
-        box-sizing: border-box;
-        vertical-align: top;
-        position: relative;
-        width: 300px;
-        height: 300px;
-        margin: 20px;
+.image-container {
 
-        .el-image {
-            padding: 0 5px;
-            width: 300px;
-            height: 300px;
-            width: 100%;
-            height: 200px;
+    /* align-items: center; */
+    padding-left: 90px;
+    justify-content: space-between;
+    flex-basis: 50%;
+    display: flex;
+
+    flex-direction: column;
+
+    .row1 {
+        flex-basis: 50%;
+        display: flex;
+
+        .select-image {
+            flex-basis: 50%;
+
+            .select-image-inner {
+                width: 300px;
+                height: 300px;
+            }
         }
 
-        .point {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: rgb(0, 0, 0);
-            border-radius: 50%;
+        .segement-image {
+            flex-basis: 50%;
+        }
+    }
+
+    .row2 {
+        flex-basis: 50%;
+        height: 100px;
+        display: flex;
+
+        /* align-items: center; */
+
+        .text-container {
+            flex-basis: 50%;
+            align-items: center;
+
+            .select-point {
+                width: 300px;
+                height: 70px;
+                border: 3px solid #50505067;
+
+                border-radius: 10px;
+                /* 边框样式 */
+                padding: 10px;
+                /* 内边距 */
+            }
+        }
+
+        .button-container {
+            flex-basis: 50%;
+            align-items: center;
+        }
+
+
+
+    }
+}
+
+.table-container {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+
+    .table {
+        display: flex;
+    }
+
+    .update-button-container {
+
+        display: flex;
+        width:400px;
+        margin-top: 10px;
+        justify-content: center;
+        align-items: center;
+        .update-button {
+            display: flex;
+            margin-top: 10px;
+            width: 80px;
         }
     }
 
 
+
+}
+
+.el-image {
+    width: 300px;
+    height: 300px;
+}
+
+.el-button {
+    height: 40px;
+}
+
+.point {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: rgb(0, 0, 0);
+    border-radius: 50%;
 }
 </style>

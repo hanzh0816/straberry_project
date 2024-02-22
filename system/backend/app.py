@@ -121,15 +121,15 @@ def handle():
     selected_image = request.form["image"]
     real_x = request.form["real_x"]
     real_y = request.form["real_y"]
+    
+    start_time = time.time()
 
     # base64解码
     image_data = base64.b64decode(selected_image)
     image = Image.open(io.BytesIO(image_data))
     image = np.array(image)  # image: RGB格式
 
-    begin_time = time.time()
     # 分割图像
-    start_time = time.time()
     ROI_image, best_mask = segment_predictor.segment(
         image, (real_x, real_y)
     )  # ROI_image: RGB格式
@@ -176,10 +176,11 @@ def check_phone_num():
     tele = request.args.get("tele")
     newPassword = request.args.get("newPassword")
     user = User.query.filter_by(username=username, tele=tele).first()
+    # print(user)
     if user:
         user.password = newPassword
         db.session.commit()
-        return {"check": True, "uid": user.uid}
+        return {"message": 'success', "uid": user.uid}
     else:
         return {"message": "Invalid username or phone number"}
 
