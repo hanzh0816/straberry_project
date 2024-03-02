@@ -6,6 +6,7 @@ import logging
 from timm.scheduler.cosine_lr import CosineLRScheduler
 from timm.scheduler.step_lr import StepLRScheduler
 from configs import get_config
+import wandb
 
 
 def build_scheduler(config, optimizer, n_iter_per_epoch):
@@ -143,3 +144,16 @@ def create_logger(output_dir, name=""):
     logger.addHandler(file_handler)
 
     return logger
+
+
+def wandb_init(config, device):
+    wandb.init(
+        project="Strawberry",
+        config=config,
+        entity="snn-training",
+        job_type="training",
+        reinit=True,
+        dir=config.OUTPUT,
+        tags=config.TAG,
+        name="process" + str(device),
+    )

@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from timm.utils import accuracy, AverageMeter
 from accelerate import Accelerator
-
+import wandb
 from datasets import build_loader
 from utils import (
     parse_option,
@@ -16,15 +16,17 @@ from utils import (
     create_logger,
     save_checkpoint,
     set_logger,
+    wandb_init,
 )
 from models import build_model, save_model
 
 
 @torch.no_grad()
-def validate(accelerator, config, data_loader, processor, model):
+def validate(accelerator, config, data_loader, processor, model, criterion):
     model.eval()
 
     batch_time = AverageMeter()
+    loss_meter = AverageMeter()
     acc1_meter = AverageMeter()
 
     end = time.time()
@@ -38,6 +40,9 @@ def validate(accelerator, config, data_loader, processor, model):
 
         outputs = model(**inputs)
         logits = outputs.logits
+        loss = criterion(logits, labels.long())
+        loss_meter.update(loss.item(), labels.size(0))
+
         predicts = F.softmax(logits, dim=1)
         [acc1] = accuracy(predicts, labels)
         acc1_meter.update(acc1.item(), labels.size(0))
@@ -51,10 +56,11 @@ def validate(accelerator, config, data_loader, processor, model):
                 f"Test: [{idx}/{len(data_loader)}]\t"
                 f"Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t"
                 f"Acc@1 {acc1_meter.val:.3f} ({acc1_meter.avg:.3f})\t"
+                f"Loss {loss_meter.val:.3f} ({loss_meter.avg:.3f})\t"
                 f"Mem {memory_used:.0f}MB"
             )
     logger.info(f" * Acc@1 {acc1_meter.avg:.3f}")
-    return acc1_meter.avg
+    return {"acc1": acc1_meter.avg, "val_loss": loss_meter.avg}
 
 
 def train_one_epoch(
@@ -111,7 +117,10 @@ def train_one_epoch(
 
     if accelerator.is_main_process:
         epoch_time = time.time() - start
-        logger.info(f"EPOCH {epoch} training takes {datetime.timedelta(seconds=int(epoch_time))}")
+        logger.info(
+            f"EPOCH {epoch} training takes {datetime.timedelta(seconds=int(epoch_time))}"
+        )
+    return {"train_loss": loss_meter.avg}
 
 
 def main(accelerator, config, logger):
@@ -136,7 +145,9 @@ def main(accelerator, config, logger):
         weight_decay=config.TRAIN.WEIGHT_DECAY,
     )
     # prepare
-    data_loader_train, model, optimizer = accelerator.prepare(data_loader_train, model, optimizer)
+    data_loader_train, model, optimizer = accelerator.prepare(
+        data_loader_train, model, optimizer
+    )
 
     # 损失函数设置
     criterion = nn.CrossEntropyLoss()
@@ -146,7 +157,7 @@ def main(accelerator, config, logger):
     max_accuracy = 0.0
     for epoch in range(config.TRAIN.START_EPOCH, config.TRAIN.EPOCHS):
         # 设置sampler epoch
-        train_one_epoch(
+        train_metrics = train_one_epoch(
             accelerator,
             config,
             processor,
@@ -158,11 +169,17 @@ def main(accelerator, config, logger):
         )
 
         if accelerator.is_main_process:
-            acc1 = validate(accelerator, config, data_loader_val, processor, model)
-
+            val_metrics = validate(
+                accelerator, config, data_loader_val, processor, model, criterion
+            )
+            acc1 = val_metrics["acc1"]
             if epoch % config.SAVE_FREQ == 0 and (acc1 > max_accuracy):
                 unwrapped_model = accelerator.unwrap_model(model)
                 save_model(unwrapped_model, config)
+
+            metric = {**train_metrics, **val_metrics}
+            metric["lr"] = optimizer.state_dict()["param_groups"][0]["lr"]
+            wandb.log(metric)
 
             print(f"Accuracy of the network on the valid images: {acc1:.1f}%")
             logger.info(f"Accuracy of the network on the valid images: {acc1:.1f}%")
@@ -188,4 +205,5 @@ if __name__ == "__main__":
     np.random.seed(seed)
 
     logger = set_logger(config)
+    wandb_init(config, device=device)
     main(accelerator, config, logger)

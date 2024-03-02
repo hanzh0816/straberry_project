@@ -1,1 +1,1 @@
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7, accelerate launch accelerate_main.py --cfg configs/resnet-101-direct-train.yaml --data-path /data1/hzh/Strawberry --batch-size 32 --output output
+accelerate launch accelerate_main.py --tag resnet --cfg configs/resnet-101-direct-train.yaml --data-path /data1/hzh/Strawberry --batch-size 32 --output output

@@ -74,10 +74,11 @@ def build_transform(is_train, config):
     t.append(
         transforms.Resize(
             size=to_2tuple(config.DATA.IMG_SIZE),
-        )
+        ),
     )
-    t.append(transforms.ToTensor())
+    # t.append(transforms.RandomCrop(size=config.DATA.IMG_SIZE))
     # t.append(transforms.Normalize(IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD))
+    t.append(transforms.ToTensor())
     return transforms.Compose(t)
 
 
