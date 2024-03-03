@@ -10,7 +10,7 @@ def create_resnet_model(config):
     if config.MODEL.PRETRAINED == True:
         model = ResNetForImageClassification.from_pretrained(config.MODEL.PRETRAINED_PATH)
     else:
-        with open(os.path.join(config.MODEL.PRETRAINED, "config.json"), "r") as f:
+        with open(os.path.join(config.MODEL.PRETRAINED_PATH, "config.json"), "r") as f:
             config = json.load(f)
         model = ResNetForImageClassification(config=config)
 
