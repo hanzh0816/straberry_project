@@ -14,7 +14,7 @@ def create_resnet_model(config):
     else:
         with open(os.path.join(config.MODEL.PRETRAINED_PATH, "config.json"), "r") as f:
             resnet_config = json.load(f)
-        model = ResNetForImageClassification(config=resnet_config)
+            model = ResNetForImageClassification(config=resnet_config)
 
     model.classifier = nn.Sequential(
         nn.Flatten(), nn.Linear(config.MODEL.EMBED_DIM, config.MODEL.NUM_CLASSES)
