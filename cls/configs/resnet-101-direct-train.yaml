@@ -5,4 +5,3 @@ MODEL:
   PRETRAINED: false
   PRETRAINED_PATH: /home/hzh/model/huggingface/resnet-101
   EMBED_DIM: 2048
-TAG: direct-train
