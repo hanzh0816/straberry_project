@@ -2,7 +2,11 @@ import os
 import json
 import torch
 import torch.nn as nn
-from transformers import AutoFeatureExtractor, ResNetForImageClassification
+from transformers import (
+    AutoFeatureExtractor,
+    ResNetForImageClassification,
+    ResNetConfig,
+)
 
 
 def create_resnet_model(config):
@@ -12,9 +16,12 @@ def create_resnet_model(config):
             config.MODEL.PRETRAINED_PATH
         )
     else:
-        with open(os.path.join(config.MODEL.PRETRAINED_PATH, "config.json"), "r") as f:
-            resnet_config = json.load(f)
-            model = ResNetForImageClassification(config=resnet_config)
+        # with open(os.path.join(config.MODEL.PRETRAINED_PATH, "config.json"), "r") as f:
+        #     resnet_config = json.load(f)
+        resnet_config = ResNetConfig.from_json_file(
+            os.path.join(config.MODEL.PRETRAINED_PATH, "config.json")
+        )
+        model = ResNetForImageClassification(config=resnet_config)
 
     model.classifier = nn.Sequential(
         nn.Flatten(), nn.Linear(config.MODEL.EMBED_DIM, config.MODEL.NUM_CLASSES)
