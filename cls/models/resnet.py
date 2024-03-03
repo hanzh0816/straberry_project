@@ -8,11 +8,13 @@ from transformers import AutoFeatureExtractor, ResNetForImageClassification
 def create_resnet_model(config):
     processor = AutoFeatureExtractor.from_pretrained(config.MODEL.PRETRAINED_PATH)
     if config.MODEL.PRETRAINED == True:
-        model = ResNetForImageClassification.from_pretrained(config.MODEL.PRETRAINED_PATH)
+        model = ResNetForImageClassification.from_pretrained(
+            config.MODEL.PRETRAINED_PATH
+        )
     else:
         with open(os.path.join(config.MODEL.PRETRAINED_PATH, "config.json"), "r") as f:
-            config = json.load(f)
-        model = ResNetForImageClassification(config=config)
+            resnet_config = json.load(f)
+        model = ResNetForImageClassification(config=resnet_config)
 
     model.classifier = nn.Sequential(
         nn.Flatten(), nn.Linear(config.MODEL.EMBED_DIM, config.MODEL.NUM_CLASSES)
